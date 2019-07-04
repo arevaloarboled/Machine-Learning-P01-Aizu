@@ -2,8 +2,8 @@ Sys.setenv(LANG = "en")
 ##Libraries
 library(class)
 library(caret)
-#ds="car"
-ds="iris"
+ds="car"
+#ds="iris"
 train_data=read.csv(paste(ds,"/train.csv",sep=""))
 test_data=read.csv(paste(ds,"/test.csv",sep=""))
 i=colnames(train_data)[length(colnames(train_data))]
@@ -55,7 +55,13 @@ ggplotConfusionMatrix <- function(m,p,r){
     geom_tile(aes(fill = log(Freq)), colour = "white") +
     scale_fill_gradient(low = "white", high = "steelblue") +
     geom_text(aes(x = Reference, y = Prediction, label = Freq)) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+      axis.text.x= element_text(size = 18),
+      axis.text.y= element_text(size = 18),
+      axis.title.x= element_text(size = 18,vjust = 0.1),
+      axis.title.y= element_text(size = 18,angle = 90,vjust = 1.1),
+      strip.text.x = element_text(size =18)
+    ) +
     ggtitle(mytitle)
   return(p)
 }
