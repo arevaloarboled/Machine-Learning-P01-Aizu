@@ -1,0 +1,51 @@
+//dot -Tpng gprh.dot -o lvq_model.png
+digraph G {
+  rankdir=LR
+  splines=line
+  node [label=""];
+  size="12,12";
+  
+  subgraph cluster_00
+  {
+    color=white;
+    node [style=solid,color=blue4, shape=point];
+    p0 pn;
+  }
+        
+  subgraph cluster_0
+  {
+    color=white;
+    node [style=solid,color=blue4, shape=circle];
+    x0[label=<x<sub>0</sub>>] xn[label=<x<sub>n</sub>>];
+    label = "inputs";
+  }
+
+  subgraph cluster_1
+  {
+    color=white;
+    node [style=solid,color=red2, shape=circle];
+    v0[label=<||x<sub>i</sub>-v<sub>j</sub>||>] vk[label=<||x<sub>i</sub>-v<sub>j</sub>||>];
+    label = "LVQ";
+  }
+
+  subgraph cluster_2
+  {
+    color=white;
+    node [style=solid,color=red2, shape=point];
+    q0 qm;
+  }
+
+  
+  p0->x0
+  pn->xn
+  
+  x0->v0[label=<v<sub>00</sub>>]
+  x0->vk[label=<v<sub>1k</sub>>]
+  
+  xn->v0[label=<v<sub>n0</sub>>]
+  xn->vk[label=<v<sub>nk</sub>>]
+
+  v0->q0[label=<class<sub>0</sub>>,color=green]
+  vk->qm[label=<class<sub>m</sub>>]
+  
+}
