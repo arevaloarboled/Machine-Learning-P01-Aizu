@@ -2,11 +2,11 @@ Sys.setenv(LANG = "en")
 ##Libraries
 library(class)
 library(caret)
-#ptm<-proc.time()
+ptm<-proc.time()
 ##Load data
-#data=read.csv("car/car.data",header=FALSE)
+data=read.csv("car/car.data",header=FALSE)
 #data=read.csv("bank/bank-additional-full.csv",sep=";")
-data=read.csv("iris/iris.data",header=FALSE)
+#data=read.csv("iris/iris.data",header=FALSE)
 ##Ordinal data
 ordinal_data=data
 to_predic=""
@@ -39,6 +39,7 @@ codebook=lvqinit(train,train_label,size=length(unique(train_label))*2,prior=rep(
 ##Train the codebook
 buildcode=olvq1(train,train_label,codebook)
 #buildcode
+proc.time()-ptm
 
 ##PCA and plot of vectors
 # pca=prcomp(t(rbind(train,buildcode$x)),center=TRUE)
@@ -69,9 +70,9 @@ ggplotConfusionMatrix <- function(m){
   return(p)
 }
 
-ggplotConfusionMatrix(cfm)
-ggsave("lvq_cfm.png",plot=last_plot())
+#ggplotConfusionMatrix(cfm)
+#ggsave("lvq_cfm.png",plot=last_plot())
 ##Plot perceptron
-library(reticulate)
-source_python('graphviz.py')
-plot_qvl(buildcode$x,as.character(buildcode$cl),colnames(train))
+#library(reticulate)
+#source_python('graphviz.py')
+#plot_qvl(buildcode$x,as.character(buildcode$cl),colnames(train))
