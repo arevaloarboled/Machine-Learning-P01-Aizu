@@ -2,10 +2,10 @@ Sys.setenv(LANG = "en")
 ##Libraries
 library(class)
 library(caret)
-ptm<-proc.time()
+#ptm<-proc.time()
 ##Load data
-data=read.csv("car/car.data",header=FALSE)
-#data=read.csv("bank/bank-additional-full.csv",sep=";")
+#data=read.csv("car/car.data",header=FALSE)
+data=read.csv("bank/bank-additional-full.csv",sep=";")
 #data=read.csv("iris/iris.data",header=FALSE)
 ##Ordinal data
 ordinal_data=data
@@ -39,39 +39,56 @@ codebook=lvqinit(train,train_label,size=length(unique(train_label))*2,prior=rep(
 ##Train the codebook
 buildcode=olvq1(train,train_label,codebook)
 #buildcode
-proc.time()-ptm
+#proc.time()-ptm
 
 ##PCA and plot of vectors
-# pca=prcomp(t(rbind(train,buildcode$x)),center=TRUE)
-# to_p=data.frame(pca1=pca$rotation[,"PC1"],pca2=pca$rotation[,"PC2"],cl=c(as.character(train_label),as.character(buildcode$cl)),sh=c(rep("no_lvq",length(train_label)),rep("lvq",dim(buildcode$x)[1])),sz=c(rep(0.5,length(train_label)),rep(0.6,dim(buildcode$x)[1])))
-# ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))
-# ggsave("lvq_plot.png",plot=last_plot())
+pca=prcomp(t(rbind(train,buildcode$x)),center=TRUE)
+to_p=data.frame(pca1=pca$rotation[,"PC1"],pca2=pca$rotation[,"PC2"],cl=c(as.character(train_label),as.character(buildcode$cl)),sh=c(rep("no_lvq",length(train_label)),rep("lvq",dim(buildcode$x)[1])),sz=c(rep(0.5,length(train_label)),rep(0.6,dim(buildcode$x)[1])))
+ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))
+ggsave("lvq_plot.png",plot=last_plot())
 
 ##Test
 predict=lvqtest(buildcode,test)
 
 ##Matrix confusion
-cfm=confusionMatrix(test_label,predict)
+cfm=confusionMatrix(predict,test_label)
+#proc.time()-ptm
+
+diag = diag(cfm$table) # number of correctly classified instances per class 
+rowsums = apply(cfm$table, 1, sum) # number of instances per class
+colsums = apply(cfm$table, 2, sum) # number of predictions per class
+recall= diag / colsums 
+precision = diag / rowsums 
+#mean(precision)
+#mean(recall)
 #proc.time()-ptm
 
 library(scales)
 
-ggplotConfusionMatrix <- function(m){
+ggplotConfusionMatrix <- function(m,p,r){
   #mytitle <- paste("Accuracy", percent_format()(m$overall[1]), "Kappa", percent_format()(m$overall[2]))
-  mytitle <- paste("Accuracy", percent_format()(m$overall[1]))
+  mytitle <- paste("Accuracy", percent_format()(m$overall[1]),"Precision",percent_format()(p),"recall",percent_format()(r))
+  #mytitle <- paste("Accuracy", percent_format()(m$overall[1]))
   p <-
     ggplot(data = as.data.frame(m$table) ,
            aes(x = Reference, y = Prediction)) +
     geom_tile(aes(fill = log(Freq)), colour = "white") +
     scale_fill_gradient(low = "white", high = "steelblue") +
     geom_text(aes(x = Reference, y = Prediction, label = Freq)) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+      axis.text.x= element_text(size = 18),
+      axis.text.y= element_text(size = 18),
+      axis.title.x= element_text(size = 18,vjust = 0.1),
+      axis.title.y= element_text(size = 18,angle = 90,vjust = 1.1),
+      strip.text.x = element_text(size =18)
+    ) +
     ggtitle(mytitle)
   return(p)
 }
 
-#ggplotConfusionMatrix(cfm)
-#ggsave("lvq_cfm.png",plot=last_plot())
+
+ggplotConfusionMatrix(cfm,mean(precision),mean(recall))
+ggsave("lvq_cfm.png",plot=last_plot())
 ##Plot perceptron
 #library(reticulate)
 #source_python('graphviz.py')

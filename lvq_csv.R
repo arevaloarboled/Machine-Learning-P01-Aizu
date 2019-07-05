@@ -2,8 +2,8 @@ Sys.setenv(LANG = "en")
 ##Libraries
 library(class)
 library(caret)
-ds="car"
-#ds="iris"
+#ds="car"
+ds="iris"
 train_data=read.csv(paste(ds,"/train.csv",sep=""))
 test_data=read.csv(paste(ds,"/test.csv",sep=""))
 i=colnames(train_data)[length(colnames(train_data))]
@@ -33,13 +33,13 @@ ggsave(paste(ds,"_lvq_plot.png",sep=""),plot=last_plot())
 predict=lvqtest(buildcode,test)
 
 ##Matrix confusion
-cfm=confusionMatrix(test_label,predict)
+cfm=confusionMatrix(predict,test_label)
 
 diag = diag(cfm$table) # number of correctly classified instances per class 
 rowsums = apply(cfm$table, 1, sum) # number of instances per class
 colsums = apply(cfm$table, 2, sum) # number of predictions per class
-precision = diag / colsums 
-recall = diag / rowsums 
+recall = diag / colsums 
+precision = diag / rowsums 
 
 #proc.time()-ptm
 

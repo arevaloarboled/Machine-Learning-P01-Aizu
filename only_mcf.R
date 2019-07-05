@@ -1,18 +1,18 @@
 Sys.setenv(LANG = "en")
 library(ggplot2)
 library(caret)
-ds="car"
-#ds="iris"
+#ds="car"
+ds="iris"
 test_data=read.csv(paste(ds,"/test.csv",sep=""))
 predict=read.csv(paste(ds,"/knn.csv",sep=""),header=FALSE)
 
-cfm=confusionMatrix(test_data[,(length(colnames(test_data)))],factor(predict$V1))
+cfm=confusionMatrix(factor(predict$V1),test_data[,(length(colnames(test_data)))])
 
 diag = diag(cfm$table) # number of correctly classified instances per class 
 rowsums = apply(cfm$table, 1, sum) # number of instances per class
 colsums = apply(cfm$table, 2, sum) # number of predictions per class
-precision = diag / colsums 
-recall = diag / rowsums 
+ recall= diag / colsums 
+precision = diag / rowsums 
 #mean(precision)
 #mean(recall)
 #proc.time()-ptm
