@@ -2,7 +2,8 @@ Sys.setenv(LANG = "en")
 library(ggplot2)
 library(caret)
 #ds="car"
-ds="iris"
+#ds="iris"
+ds="bank"
 test_data=read.csv(paste(ds,"/test.csv",sep=""))
 predict=read.csv(paste(ds,"/knn.csv",sep=""),header=FALSE)
 
