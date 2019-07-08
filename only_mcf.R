@@ -20,10 +20,8 @@ precision = diag / rowsums
 
 library(scales)
 
-ggplotConfusionMatrix <- function(m,p,r){
-  #mytitle <- paste("Accuracy", percent_format()(m$overall[1]), "Kappa", percent_format()(m$overall[2]))
+plotcfm <- function(m,p,r){
   mytitle <- paste("Accuracy", percent_format()(m$overall[1]),"Precision",percent_format()(p),"recall",percent_format()(r))
-  #mytitle <- paste("Accuracy", percent_format()(m$overall[1]))
   p <-
     ggplot(data = as.data.frame(m$table) ,
            aes(x = Reference, y = Prediction)) +
@@ -42,5 +40,5 @@ ggplotConfusionMatrix <- function(m,p,r){
 }
 
 
-ggplotConfusionMatrix(cfm,mean(precision),mean(recall))
+plotcfm(cfm,mean(precision),mean(recall))
 ggsave(paste(ds,"_knn_cfm.png",sep=""),plot=last_plot())

@@ -80,7 +80,7 @@ precision = diag / rowsums
 
 
 
-ggplotConfusionMatrix <- function(m,p,r){
+plotcfm <- function(m,p,r){
   mytitle <- paste("Accuracy", percent_format()(m$overall[1]),"Precision",percent_format()(p),"recall",percent_format()(r))
   ggplot(data = as.data.frame(m$table) ,
            aes(x = Reference, y = Prediction)) +
@@ -98,7 +98,7 @@ ggplotConfusionMatrix <- function(m,p,r){
   ggsave(paste(ds,"_lvq_cfm.png",sep=""),plot=last_plot())  
 }
 
-#ggplotConfusionMatrix(cfm,mean(precision),mean(recall))
+#plotcfm(cfm,mean(precision),mean(recall))
 ##Plot perceptron
 #library(reticulate)
 #source_python('graphviz.py')
