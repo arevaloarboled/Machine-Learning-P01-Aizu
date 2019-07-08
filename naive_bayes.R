@@ -56,5 +56,5 @@ plotcfm <- function(m,p,r){
 plotcfm(cfm,mean(precision),mean(recall))
 
 #png(filename=paste(ds,"_bayes_model.png",sep=""))
-plot(model)
+plot(model,lwd=4,ps=3)
 #dev.off()

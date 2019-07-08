@@ -53,7 +53,13 @@ pca_train<-function(){
 pca=prcomp(t(rbind(train,buildcode$x)),center=TRUE)
 to_p=data.frame(pca1=pca$rotation[,"PC1"],pca2=pca$rotation[,"PC2"],cl=c(as.character(train_label),as.character(buildcode$cl)),sh=c(rep("no_lvq",length(train_label)),rep("lvq",dim(buildcode$x)[1])),sz=c(rep("no_lvq",length(train_label)),rep("lvq",dim(buildcode$x)[1])))
 #ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))
-ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))+scale_shape_manual(values = c(15,1))+scale_size_manual(values = c(3,1)) 
+ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))+scale_shape_manual(values = c(15,1))+scale_size_manual(values = c(3,1))+ theme(legend.position = "none",
+      axis.text.x= element_text(size = 18),
+      axis.text.y= element_text(size = 18),
+      axis.title.x= element_text(size = 18,vjust = 0.1),
+      axis.title.y= element_text(size = 18,angle = 90,vjust = 1.1),
+      strip.text.x = element_text(size =18)
+    )
 ggsave(paste(ds,"_lvq_train_plot.png",sep=""),plot=last_plot())
 }
 #pca_train()
@@ -63,7 +69,13 @@ predict=lvqtest(buildcode,test)
 pca_test<-function(){
 pca=prcomp(t(rbind(test,buildcode$x)),center=TRUE)
 to_p=data.frame(pca1=pca$rotation[,"PC1"],pca2=pca$rotation[,"PC2"],cl=c(as.character(test_label),as.character(buildcode$cl)),sh=c(predict==test_label,rep("lvq",dim(buildcode$x)[1])),sz=c(rep("no_lvq",length(test_label)),rep("lvq",dim(buildcode$x)[1])))
-ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))+scale_shape_manual(values = c(4,1, 15))+scale_size_manual(values = c(3,1)) 
+ggplot(to_p,aes(pca1,pca2))+geom_point(aes(colour=factor(to_p$cl),shape=factor(to_p$sh),size=to_p$sz))+scale_shape_manual(values = c(4,1, 15))+scale_size_manual(values = c(3,1)) + theme(legend.position = "none",
+      axis.text.x= element_text(size = 18),
+      axis.text.y= element_text(size = 18),
+      axis.title.x= element_text(size = 18,vjust = 0.1),
+      axis.title.y= element_text(size = 18,angle = 90,vjust = 1.1),
+      strip.text.x = element_text(size =18)
+    )
 ggsave(paste(ds,"_lvq_test_plot.png",sep=""),plot=last_plot())
 }
 #pca_test()
