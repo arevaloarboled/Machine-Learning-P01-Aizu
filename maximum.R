@@ -5,9 +5,9 @@ library(caret)
 library(stats4)
 #library(rmutil)
 #library(MASS)
-ds="car"
+#ds="car"
 #ds="iris"
-#ds="bank"
+ds="bank"
 train_data=read.csv(paste(ds,"/train.csv",sep=""))
 test_data=read.csv(paste(ds,"/test.csv",sep=""))
 i=colnames(train_data)[length(colnames(train_data))]
@@ -34,9 +34,9 @@ for (j in unique(train_label)) {
 		s=sd(x)
 		if(s==0){
 			s=0.00001
-			tmp[k]=list(c(mu=mean(x),sigma=1,p=length(x)/length(train_label)))
+			tmp[k]=list(c(mu=mean(x),sigma=0.00001,p=length(x)/length(train_label)))
 		}else{
-			est=mle(dd, start = list(mu = 0, sigma=1))
+			est=mle(dd, start = list(mu = mean(x), sigma=s))
 			tmp[k]=list((c(coef(est)["mu"],coef(est)["sigma"],p=length(x)/length(train_label))))
 		}
 		#est=fitdistr(x,dlevy,start=list(m=1,s=s),lower=c(-Inf,0.00001),upper=c(min(x)-0.00001,Inf))
@@ -55,28 +55,28 @@ for (j in unique(train_label)) {
 coefficients
 #coefficients[[j]][["V2"]]["mu"]
 p_cl <- function(z,c,cl) {
-     p=0
+     p=1
      for (j in colnames(z)) {
      	#p=p+pnorm(as.numeric(z[j]),as.numeric(c[[cl]][[j]]["mu"]),as.numeric(c[[cl]][[j]]["sigma"]),lower.tail=FALSE)#*as.numeric(c[[cl]][[j]]["p"])
-     	p=p+pnorm(as.numeric(z[j]),as.numeric(c[[cl]][[j]]["mu"]),as.numeric(c[[cl]][[j]]["sigma"]))#*as.numeric(c[[cl]][[j]]["p"])
+     	p=p*pnorm(as.numeric(z[j]),as.numeric(c[[cl]][[j]]["mu"]),as.numeric(c[[cl]][[j]]["sigma"]))#*as.numeric(c[[cl]][[j]]["p"])
      	#p=p*plevy(as.numeric(z[j]),as.numeric(c[[cl]][[j]]["mu"]),as.numeric(c[[cl]][[j]]["sigma"]))#*as.numeric(c[[cl]][[j]]["p"])
      	#print(j)
      	#print(pnorm(as.numeric(z[j]),as.numeric(c[[cl]][[j]]["mu"]),as.numeric(c[[cl]][[j]]["sigma"]),lower.tail=FALSE))
      }
-     return(p)
+     #return(p)
      #return((p/length(colnames(z)))*as.numeric(c[[cl]][[j]]["p"]))
      #return((p/length(colnames(z))))
-     #return(p*as.numeric(c[[cl]][[j]]["p"]))
+     return(p*as.numeric(c[[cl]][[j]]["p"]))
      #return(p*as.numeric(c[[cl]][[j]]["p"]))
  }
 #p_cl(test_data[15,0:(length(colnames(train_data))-1)],coefficients,as.character(test_data[1,i]))
 #p_cl(test_data[15,0:(length(colnames(train_data))-1)],coefficients,as.character(test_data[11,i]))
 #p_cl(test_data[15,0:(length(colnames(train_data))-1)],coefficients,as.character(test_data[21,i]))
 
-p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("good"))
-p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("unacc"))
-p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("acc"))
-p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("vgood"))
+#p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("good"))
+#p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("unacc"))
+#p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("acc"))
+#p_cl(test_data[344,0:(length(colnames(train_data))-1)],coefficients,as.character("vgood"))
 P<-function(y,c,clss){
 	q=0
 	v=""
